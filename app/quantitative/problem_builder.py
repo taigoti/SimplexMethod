@@ -1,6 +1,6 @@
 from pulp import LpVariable, LpProblem, LpMaximize
 
-def get_vars(data):
+def build_vars(data):
     variablesDict = {}
     k = 0
 
@@ -13,22 +13,40 @@ def get_vars(data):
 
     return variablesDict
 
+def build_constraints(matrix, x1, x2):
+    constraintsDict = {}
+    k = 0
+
+    while k < len(matrix):
+        key = "y" + str(k + 1)
+
+        value = (matrix[k][0] * x1) + (matrix[k][1] * x2) <= matrix[k][2]
+        constraintsDict[key] = value
+        k += 1
+
+    return constraintsDict
+
 
 class BuildProblem():
     def __init__(self, data):
-        self.variables = get_vars(data.get("variables"))
+        constraints_matrix = data.get("constraints")
+        variables_array = data.get("variables")
+
+        self.variables = build_vars(variables_array)
         self.gains = data.get("gains")
-        self.constraints = data.get("constraints")
+        self.constraints = build_constraints(
+            constraints_matrix, self.variables.get("x1"), self.variables.get("x2")
+        )
         self.problem = LpProblem("Optimization_Problem", LpMaximize)
 
-    def get_keys(self):
+    def get_vars(self):
         return self.variables
 
     def get_gains(self):
         return self.gains
 
-    def get_constraints(self):
-        return self.constraints
+    def get_constraints(self, constraint):
+        return self.constraints.get(constraint)
 
     def get_problem(self):
         return self.problem
