@@ -8,8 +8,9 @@ def optimize_problem(dict):
 
     prob += problem.get_objective_function()  # Função objetivo
 
-    prob += problem.get_constraints("y1")  # Restrição y1
-    prob += problem.get_constraints("y2")  # Restrição y2
+    constraints = problem.get_constraints()
+    for constraint in constraints.values():
+        prob += constraint
 
     status = prob.solve()  # Resolve o problema
     problem_status = LpStatus[status]  # Verifica o status do problema

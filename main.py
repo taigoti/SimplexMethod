@@ -9,6 +9,6 @@ if __name__ == "__main__":
 
     print("\n=============================================\n")
 
-    data = set_expressions()
+    problem = set_expressions()
 
-    optimize_problem(data)
+    optimize_problem(problem)

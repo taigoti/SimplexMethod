@@ -27,7 +27,7 @@ def build_constraints(matrix, x1, x2):
     return constraintsDict
 
 
-class BuildProblem():
+class BuildProblem:
     def __init__(self, data):
         constraints_matrix = data.get("constraints")
         variables_array = data.get("variables")
@@ -45,8 +45,8 @@ class BuildProblem():
     def get_gains(self):
         return self.gains
 
-    def get_constraints(self, constraint):
-        return self.constraints.get(constraint)
+    def get_constraints(self):
+        return self.constraints
 
     def get_problem(self):
         return self.problem
