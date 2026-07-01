@@ -19,7 +19,7 @@ def optimize_problem(dict):
     print("=========================================================")
 
     print(f"Status do Algoritmo: {problem_status}")
-    print(f"Função Objetivo: L_max = {problem.get_objective_function()}")
+    print(f"Função Objetivo: L = {problem.get_objective_function()}")
 
     for x in problem.get_vars():
         print(f"Quantidade Ótima do {x}: {value(problem.get_vars()[x])}")
@@ -30,24 +30,13 @@ def optimize_problem(dict):
 
 def check_status(status):
     if status == "Infeasible":
-        # Se o PuLP disser que é inviável, lançamos o nosso erro customizado
+        # Se o PuLP disser que é inviável, lança exceção
         raise SolucaoInviavelError()
 
     if status == "Unbounded":
-        # Se o PuLP disser que é ilimitado, lançamos o nosso erro customizado
+        # Se o PuLP disser que é ilimitado, lança exceção
         raise SolucaoIlimitadaError()
 
     if status != "Optimal":
-        # Para qualquer outro status de erro genérico do solver
+        # Qualquer outro erro
         raise ModelizacaoError(f"O solver falhou com o status: {status}")
-
-if __name__ == "__main__":
-    data = {
-        "variables": ["x1", "x2", "x3"],
-        "gains": [7.8, 8.9, 7.5],
-        "constraints": [
-            [2, 4, 1, 35], [2, 3, 1, 42], [3, 3, 3, 30]
-        ]
-    }
-
-    optimize_problem(data)
