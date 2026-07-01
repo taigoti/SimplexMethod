@@ -57,7 +57,11 @@ class BuildProblem:
         return self.problem
 
     def get_objective_function(self):
-        x1 = self.variables.get("x1")
-        x2 = self.variables.get("x2")
+        i, objective = 0, 0
 
-        return (self.gains[0] * x1) + (self.gains[1] * x2)
+        while i < len(self.variables):
+            objective += (self.gains[i] *
+                          self.variables.get("x" + str(i + 1)))
+            i += 1
+
+        return objective

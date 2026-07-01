@@ -6,7 +6,7 @@ def optimize_problem(dict):
     problem = BuildProblem(dict) # Build do problema (variáveis, ganhos, restrições, função objetivo)
     prob = problem.get_problem() # Associa o problema à variàvel
 
-    prob += problem.get_objective_function()  # Função objetivo
+    prob += problem.get_objective_function() # Função objetivo
 
     constraints = problem.get_constraints()
     for constraint in constraints.values():
@@ -17,12 +17,15 @@ def optimize_problem(dict):
     check_status(problem_status)  # Verifica as exceções
 
     print("=========================================================")
+
     print(f"Status do Algoritmo: {problem_status}")
+    print(f"Função Objetivo: L_max = {problem.get_objective_function()}")
 
     for x in problem.get_vars():
         print(f"Quantidade Ótima do {x}: {value(problem.get_vars()[x])}")
 
     print(f"Lucro Máximo Possível: R$ {value(prob.objective)}")
+
     print("=========================================================")
 
 def check_status(status):
@@ -40,10 +43,10 @@ def check_status(status):
 
 if __name__ == "__main__":
     data = {
-        "variables": ["x1", "x2"],
-        "gains": [3, 5],
+        "variables": ["x1", "x2", "x3"],
+        "gains": [7.8, 8.9, 7.5],
         "constraints": [
-            [3, 1, 35], [1, 3, 42], [2, 5, 30]
+            [2, 4, 1, 35], [2, 3, 1, 42], [3, 3, 3, 30]
         ]
     }
 

@@ -42,7 +42,7 @@ def set_constraints(num: int) -> list[list]:
         try:
             while k <= num:
                 constraint = str(
-                    input(f"Digite a {k}ª restrição (ex: 3x1 + 0x2 <= 15): "))
+                    input(f"Digite a {k}ª restrição (ex: 3x1 + 0x2 + 1x3 <= 15): "))
 
                 result = re.findall(format, constraint)  #Faz a busca de acordo com a formatação
                 constraints.append(
