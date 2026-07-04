@@ -1,6 +1,6 @@
-from pulp import LpVariable, LpProblem, LpMaximize, LpConstraint
+from pulp import LpVariable, LpProblem, LpMaximize, LpMinimize
 
-def build_vars(data):
+def build_vars(data: list) -> dict:
     variablesDict = {}
     k = 0
 
@@ -13,18 +13,21 @@ def build_vars(data):
 
     return variablesDict
 
-def build_constraints(matrix, variables):
+def build_constraints(matrix: list, variables: dict, objective: bool) -> dict:
     constraintsDict = {}
-    variableValue = 0
-    k = 0
-    i = 0
+    variableValue, k, i = 0, 0, 0
+    constraint = None
 
     while k < len(matrix):
         while i < (len(matrix[k]) - 1):
             variableValue += (matrix[k][i] * variables["x" + str(i+1)])
             i += 1
 
-        constraint = (variableValue <= matrix[k][len(matrix[k]) - 1])
+        if objective:
+            constraint = (variableValue <= matrix[k][len(matrix[k]) - 1])
+        if not objective:
+            constraint = (variableValue >= matrix[k][len(matrix[k]) - 1])
+
         key = "y" + str(k + 1)
 
         constraintsDict[key] = constraint
@@ -33,16 +36,24 @@ def build_constraints(matrix, variables):
 
     return constraintsDict
 
+def build_problem(to_maximize: bool) -> LpProblem:
+    if to_maximize:
+        return LpProblem("Maximize_Problem", LpMaximize)
+
+    return LpProblem("Minimize_Problem", LpMinimize)
+
 
 class BuildProblem:
     def __init__(self, data):
         constraints_matrix = data.get("constraints")
         variables_array = data.get("variables")
+        gains_array = data.get("gains")
+        objective = data.get("toMaximize")
 
         self.variables = build_vars(variables_array)
-        self.gains = data.get("gains")
-        self.constraints = build_constraints(constraints_matrix, self.variables)
-        self.problem = LpProblem("Optimization_Problem", LpMaximize)
+        self.gains = gains_array
+        self.constraints = build_constraints(constraints_matrix, self.variables, objective)
+        self.problem = build_problem(objective)
 
     def get_vars(self):
         return self.variables

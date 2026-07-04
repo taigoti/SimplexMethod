@@ -55,28 +55,45 @@ def set_constraints(num: int) -> list[list]:
 
     return constraints
 
-def build_data(variables: list, gains: list, constraints: list) -> dict[str, list]:
+def set_objective(objective: str) -> bool:
+    objective = objective.strip().lower()
+
+    while objective == "" or objective == "m":
+        objective = str(input("Digite um objetivo válido!! (max ou min)"))
+
+    if "maximizar".startswith(objective):
+        return True
+    if "minimizar".startswith(objective):
+        return False
+    else:
+        return True
+
+def build_data(variables: list, gains: list, constraints: list, objective: bool) -> dict[str, list | bool]:
     data = {
         "variables": variables,
         "gains": gains,
-        "constraints": constraints
+        "constraints": constraints,
+        "toMaximize": objective
     }
 
     return data
 
-def set_expressions() -> dict[str, list]:
+def set_expressions() -> dict[str, list | bool]:
     while True:
         try:
-            num_variables = int(
+            variables = int(
                 input("Digite quantas variáveis o problema terá (ex: 2 = x1, x2): "))
-            variables = set_variables(num_variables)
+            variables = set_variables(variables)
 
             gains = set_gains(len(variables))
 
-            num_constraints = int(
-                input("Quantas restrições o problema tem? (desconsidere a restrição de não-negatividade)"))
-            constraints = set_constraints(num_constraints)
+            constraints = int(
+                input("Quantas restrições o problema tem? (desconsidere a restrição de não-negatividade) "))
+            constraints = set_constraints(constraints)
 
-            return build_data(variables, gains, constraints)
+            obj = str(input("Você quer maximizar ou minimizar o problema? "))
+            objective = set_objective(obj)
+
+            return build_data(variables, gains, constraints, objective)
         except Exception as e:
             print(f"Ocorreu um erro: {e}")
