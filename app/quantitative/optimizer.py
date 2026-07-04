@@ -1,6 +1,6 @@
 from pulp import *
 from app.quantitative.exceptions import *
-from app.quantitative.problem_builder import BuildProblem
+from app.models.problem_builder import BuildProblem
 
 def optimize_problem(dict):
     problem = BuildProblem(dict) # Build do problema (variáveis, ganhos, restrições, função objetivo)
