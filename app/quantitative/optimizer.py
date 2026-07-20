@@ -1,9 +1,11 @@
 from pulp import *
+
+from app.models.web_view import show_results
 from app.quantitative.exceptions import *
 from app.models.problem_builder import BuildProblem
 
-def optimize_problem(dict):
-    problem = BuildProblem(dict) # Build do problema (variáveis, ganhos, restrições, função objetivo)
+def optimize_problem(problem_dict):
+    problem = BuildProblem(problem_dict) # Build do problema (variáveis, ganhos, restrições, função objetivo)
     prob = problem.get_problem() # Associa o problema à variàvel
 
     prob += problem.get_objective_function() # Função objetivo
@@ -16,6 +18,7 @@ def optimize_problem(dict):
     problem_status = LpStatus[status]  # Verifica o status do problema
     check_status(problem_status)  # Verifica as exceções
 
+    show_results(problem_status, problem.get_objective_function(), problem.get_vars(), value(prob.objective))
     print("=========================================================")
 
     print(f"Status do Algoritmo: {problem_status}")
