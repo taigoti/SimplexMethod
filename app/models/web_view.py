@@ -11,6 +11,20 @@ def executing(optimize_problem, *args, **kwargs):
         time.sleep(1)
         optimize_problem(*args, **kwargs)
 
+def variables_num():
+    return st.number_input(
+        "Digite quantas variáveis o problema terá (ex: 2 = x1, x2): ")
+
+def constraints_num():
+    return st.number_input(
+        "Quantas restrições o problema tem? (desconsidere a restrição de não-negatividade) ")
+
+def define_gains(x_gain):
+    return st.number_input(f"Digite o ganho da váriàvel x{x_gain} (ex: 7.8): ")
+
+def define_objective():
+    return st.text_input("Você quer maximizar ou minimizar o problema? ")
+
 def show_results(status, objective, variables, max_gain):
     st.write(status)
     st.write(objective)

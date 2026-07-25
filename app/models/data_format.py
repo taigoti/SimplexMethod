@@ -1,4 +1,5 @@
 import re
+from app.models.web_view import *
 
 def set_variables(num: int) -> list[str]:
     variables = []
@@ -23,8 +24,7 @@ def set_gains(variables: int) -> list[float]:
     while True:
         try:
             while x <= variables:
-                gain = float(
-                    input(f"Digite o ganho da váriàvel x{x} (ex: 7.8): "))
+                gain = float(define_gains(x))
                 gains.append(gain)
                 x += 1
             break
@@ -81,17 +81,15 @@ def build_data(variables: list, gains: list, constraints: list, objective: bool)
 def set_expressions() -> dict[str, list | bool]:
     while True:
         try:
-            variables = int(
-                input("Digite quantas variáveis o problema terá (ex: 2 = x1, x2): "))
+            variables = int(variables_num())
             variables = set_variables(variables)
 
             gains = set_gains(len(variables))
 
-            constraints = int(
-                input("Quantas restrições o problema tem? (desconsidere a restrição de não-negatividade) "))
+            constraints = int(constraints_num())
             constraints = set_constraints(constraints)
 
-            obj = str(input("Você quer maximizar ou minimizar o problema? "))
+            obj = str(define_objective())
             objective = set_objective(obj)
 
             return build_data(variables, gains, constraints, objective)
