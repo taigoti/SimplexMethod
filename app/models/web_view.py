@@ -33,19 +33,43 @@ def show_results(status, objective, variables, max_gain):
 
 
 def input_problem():
-    i = 1
+    gains_array = []
     cons_array = []
 
     vars = st.number_input(
         "Digite quantas variáveis o problema terá (ex: 2 = x1, x2): ",
         min_value=2)
 
-    cons = st.number_input(
-        "Quantas restrições o problema tem? (desconsidere a restrição de não-negatividade) ",
-        min_value=1)
+    for i in range(vars):
+            gains_array.append(
+                st.number_input(f"Digite o ganho da váriàvel x{i+1} (ex: 7.8): ",
+                                key=f"gain_{i}"))
 
-    while i <= cons:
-        cons_array.append(st.text_input(f"Digite a {i}ª restrição: ", placeholder="ex: 3x1 + 0x2 + 1x3 <= 15"))
-        i += 1
+    if "confirm_gains" not in st.session_state:
+        st.session_state.confirm_gains = False
 
-    print(vars, cons, cons_array)
+    if st.button("Confirmar Lucro das Variáveis"):
+        st.session_state.confirm_gains = True
+
+    st.write("---")
+
+    if st.session_state.confirm_gains:
+        cons = st.number_input(
+                "Quantas restrições o problema tem? (desconsidere a restrição de não-negatividade) ",
+                min_value=1)
+
+        for i in range(cons):
+            cons_array.append(
+                st.text_input(f"Digite a {i+1}ª restrição: ",
+                                placeholder=f"ex: {i+1}x1 + {i-1}x2 + {i+2}x3 <= 15", key=f"cons_{i}"))
+
+        if "confirm_cons" not in st.session_state:
+            st.session_state.confirm_cons = False
+
+        if st.button("Confirmar Restrições"):
+            st.session_state.confirm_cons = True
+
+        st.write("---")
+
+        if st.session_state.confirm_cons:
+            st.write(vars, cons, cons_array)
