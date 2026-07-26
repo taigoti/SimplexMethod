@@ -11,26 +11,11 @@ def executing(optimize_problem, *args, **kwargs):
         time.sleep(2)
         optimize_problem(*args, **kwargs)
 
-def variables_num():
-    return st.number_input(
-        "Digite quantas variáveis o problema terá (ex: 2 = x1, x2): ")
-
-def constraints_num():
-    return st.number_input(
-        "Quantas restrições o problema tem? (desconsidere a restrição de não-negatividade) ")
-
-def define_gains(x_gain):
-    return st.number_input(f"Digite o ganho da váriàvel x{x_gain} (ex: 7.8): ")
-
-def define_objective():
-    return st.text_input("Você quer maximizar ou minimizar o problema? ")
-
 def show_results(status, objective, variables, max_gain):
     st.write(status)
     st.write(objective)
     st.write(variables)
     st.write(max_gain)
-
 
 def input_problem():
     gains_array = []
@@ -48,7 +33,7 @@ def input_problem():
     if "confirm_gains" not in st.session_state:
         st.session_state.confirm_gains = False
 
-    if st.button("Confirmar Lucro das Variáveis"):
+    if st.button("Confirmar Lucro das Variáveis", key="gain"):
         st.session_state.confirm_gains = True
 
     st.write("---")
@@ -61,15 +46,29 @@ def input_problem():
         for i in range(cons):
             cons_array.append(
                 st.text_input(f"Digite a {i+1}ª restrição: ",
-                                placeholder=f"ex: {i+1}x1 + {i-1}x2 + {i+2}x3 <= 15", key=f"cons_{i}"))
+                              placeholder=f"ex: {i+1}x1 + {i}x2 + {i+2}x3 <= 15",
+                              key=f"cons_{i}"))
 
         if "confirm_cons" not in st.session_state:
             st.session_state.confirm_cons = False
 
-        if st.button("Confirmar Restrições"):
+        if st.button("Confirmar Restrições", key="cons"):
             st.session_state.confirm_cons = True
 
         st.write("---")
 
         if st.session_state.confirm_cons:
-            st.write(vars, cons, cons_array)
+            obj = st.text_input("Você quer maximizar ou minimizar o problema",
+                          placeholder="max/min",
+                          key=f"objective")
+
+            if "confirm_obj" not in st.session_state:
+                st.session_state.confirm_obj = False
+
+            if st.button("Confirmar Restrições", key="obj"):
+                st.session_state.confirm_obj = True
+
+            st.write("---")
+
+            if st.session_state.confirm_obj:
+                st.write(vars, cons, cons_array, obj)
