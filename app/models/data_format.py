@@ -1,65 +1,24 @@
 import re
 from app.models.web_view import *
 
-def set_variables(num: int) -> list[str]:
-    variables = []
-    k = 1
-
-    while True:
-        try:
-            while k <= num:
-                variables.append("x" + str(k))
-                k += 1
-
-            break
-        except ValueError:
-            print("Digite um número inteiro!")
-
-    return variables
-
-def set_gains(variables: int) -> list[float]:
-    gains = []
-    x = 1
-
-    while True:
-        try:
-            while x <= variables:
-                gain = float(define_gains(x))
-                gains.append(gain)
-                x += 1
-            break
-        except ValueError:
-            print("Digite um valor válido!")
-
-    return gains
-
-def set_constraints(num: int) -> list[list]:
+def set_constraints(constraints: list) -> list[list]:
     format = r'(?<!x)\d+'  # Este padrão busca números (\d+), mas ignora se tiver um 'x' colado antes dele (Negative Lookbehind)
-    constraints = []
-    k = 1
+    coeficients = []
 
-    while True:
-        try:
-            while k <= num:
-                constraint = str(
-                    input(f"Digite a {k}ª restrição (ex: 3x1 + 0x2 + 1x3 <= 15): "))
+    for i in constraints:
+        result = re.findall(format, constraints[i])
 
-                result = re.findall(format, constraint)  #Faz a busca de acordo com a formatação
-                constraints.append(
-                    [int(num) for num in result])
+        coeficients.append(
+            [int(num) for num in result])
 
-                k += 1
-            break
-        except ValueError:
-            print("Digite no formato correto!")
+    return coeficients
 
-    return constraints
 
 def set_objective(objective: str) -> bool:
     objective = objective.strip().lower()
 
     while objective == "" or objective == "m":
-        objective = str(input("Digite um objetivo válido!! (max ou min)"))
+        objective = str(input(invalid_format()))
 
     if "maximizar".startswith(objective):
         return True
@@ -81,17 +40,10 @@ def build_data(variables: list, gains: list, constraints: list, objective: bool)
 def set_expressions() -> dict[str, list | bool]:
     while True:
         try:
-            variables = int(variables_num())
-            variables = set_variables(variables)
-
-            gains = set_gains(len(variables))
-
-            constraints = int(constraints_num())
+            variables, gains, constraints, objective = input_problem()
             constraints = set_constraints(constraints)
-
-            obj = str(define_objective())
-            objective = set_objective(obj)
-
+            print(constraints)
             return build_data(variables, gains, constraints, objective)
+
         except Exception as e:
             print(f"Ocorreu um erro: {e}")

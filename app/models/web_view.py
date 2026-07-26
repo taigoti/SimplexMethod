@@ -17,7 +17,11 @@ def show_results(status, objective, variables, max_gain):
     st.write(variables)
     st.write(max_gain)
 
+def invalid_format():
+    st.write("Digite um valor/formato válido!")
+
 def input_problem():
+    vars_array = []
     gains_array = []
     cons_array = []
 
@@ -25,10 +29,19 @@ def input_problem():
         "Digite quantas variáveis o problema terá (ex: 2 = x1, x2): ",
         min_value=2)
 
-    for i in range(vars):
-            gains_array.append(
-                st.number_input(f"Digite o ganho da váriàvel x{i+1} (ex: 7.8): ",
-                                key=f"gain_{i}"))
+    while True:
+        try:
+            for i in range(vars):
+                vars_array.append("x" + str(i+1))
+
+                gain = st.number_input(f"Digite o ganho da váriàvel x{i + 1} (ex: 7.8): ",
+                        key=f"gain_{i}")
+
+                gains_array.append(gain)
+
+            break
+        except ValueError:
+            invalid_format()
 
     if "confirm_gains" not in st.session_state:
         st.session_state.confirm_gains = False
@@ -59,8 +72,7 @@ def input_problem():
 
         if st.session_state.confirm_cons:
             obj = st.text_input("Você quer maximizar ou minimizar o problema",
-                          placeholder="max/min",
-                          key=f"objective")
+                          placeholder="max/min")
 
             if "confirm_obj" not in st.session_state:
                 st.session_state.confirm_obj = False
@@ -71,4 +83,4 @@ def input_problem():
             st.write("---")
 
             if st.session_state.confirm_obj:
-                st.write(vars, cons, cons_array, obj)
+                return vars_array, gains_array, cons_array, obj
